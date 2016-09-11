@@ -163,7 +163,7 @@ PRODUCT_PACKAGES += \
     gps.msm8996 \
     libcurl
 
- Lights
+# Lights
 PRODUCT_PACKAGES += \
     lights.msm8996
 

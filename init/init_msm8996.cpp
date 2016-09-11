@@ -27,24 +27,14 @@
    IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <fcntl.h>
 
+#include <cutils/properties.h>
 #include "vendor_init.h"
-#include "property_service.h"
 #include "log.h"
 #include "util.h"
-
-#include "init_msm8916.h"
-
-__attribute__ ((weak))
-void init_target_properties()
-{
-}
 
 static int read_file2(const char *fname, char *data, int max_size)
 {
@@ -69,36 +59,54 @@ static int read_file2(const char *fname, char *data, int max_size)
     return 1;
 }
 
-static void init_alarm_boot_properties()
+void init_alarm_boot_properties()
 {
     char const *alarm_file = "/proc/sys/kernel/boot_reason";
     char buf[64];
 
-    if (read_file2(alarm_file, buf, sizeof(buf))) {
-        /*
-         * Setup ro.alarm_boot value to true when it is RTC triggered boot up
-         * For existing PMIC chips, the following mapping applies
-         * for the value of boot_reason:
-         *
-         * 0 -> unknown
-         * 1 -> hard reset
-         * 2 -> sudden momentary power loss (SMPL)
-         * 3 -> real time clock (RTC)
-         * 4 -> DC charger inserted
-         * 5 -> USB charger insertd
-         * 6 -> PON1 pin toggled (for secondary PMICs)
-         * 7 -> CBLPWR_N pin toggled (for external power supply)
-         * 8 -> KPDPWR_N pin toggled (power key pressed)
-         */
-        if (buf[0] == '3')
+    if(read_file2(alarm_file, buf, sizeof(buf))) {
+
+    /*
+     * Setup ro.alarm_boot value to true when it is RTC triggered boot up
+     * For existing PMIC chips, the following mapping applies
+     * for the value of boot_reason:
+     *
+     * 0 -> unknown
+     * 1 -> hard reset
+     * 2 -> sudden momentary power loss (SMPL)
+     * 3 -> real time clock (RTC)
+     * 4 -> DC charger inserted
+     * 5 -> USB charger insertd
+     * 6 -> PON1 pin toggled (for secondary PMICs)
+     * 7 -> CBLPWR_N pin toggled (for external power supply)
+     * 8 -> KPDPWR_N pin toggled (power key pressed)
+     */
+        if(buf[0] == '3')
             property_set("ro.alarm_boot", "true");
         else
             property_set("ro.alarm_boot", "false");
     }
 }
 
-void vendor_load_properties()
-{
-    init_target_properties();
+void vendor_load_properties() {
+    char device[PROP_VALUE_MAX];
+    char rf_version[PROP_VALUE_MAX];
+    int rc;
+
+    rc = property_get("ro.cm.device", device, NULL);
+    if (!rc || strncmp(device, "oneplus3", PROP_VALUE_MAX))
+        return;
+
+    property_get("ro.boot.rf_version", rf_version, NULL);
+
+    if (strstr(rf_version, "11") || strstr(rf_version, "31")) {
+        /* Chinese/America*/
+        property_set("ro.product.model", "ONEPLUS A3000");
+    } else if (strstr(rf_version, "21")) {
+        /* Asia/Europe */
+        property_set("ro.product.model", "ONEPLUS A3003");
+    }
+
     init_alarm_boot_properties();
 }
+

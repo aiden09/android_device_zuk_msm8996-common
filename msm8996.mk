@@ -153,10 +153,6 @@ PRODUCT_PACKAGES += \
     liboverlay \
     libtinyxml
 
-# Display calibration
-PRODUCT_PACKAGES += \
-    libjni_livedisplay
-
 # Gello
 PRODUCT_PACKAGES += \
     Gello
@@ -173,6 +169,11 @@ PRODUCT_PACKAGES += \
 # LiveDisplay native
 PRODUCT_PACKAGES += \
     libjni_livedisplay
+
+
+# Zuk Doze (OP3)
+PRODUCT_PACKAGES += \
+    ZukDoze
 
 # Timeservices
 #PRODUCT_PACKAGES += \

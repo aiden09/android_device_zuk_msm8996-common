@@ -172,8 +172,8 @@ PRODUCT_PACKAGES += \
     libjni_livedisplay
 
 # Timeservices
-PRODUCT_PACKAGES += \
-	libtime_genoff
+#PRODUCT_PACKAGES += \
+#	libtime_genoff
 
 # Media
 PRODUCT_COPY_FILES += \

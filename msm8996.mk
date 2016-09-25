@@ -176,8 +176,8 @@ PRODUCT_PACKAGES += \
     ZukDoze
 
 # Timeservices
-#PRODUCT_PACKAGES += \
-#	libtime_genoff
+PRODUCT_PACKAGES += \
+	libtime_genoff
 
 # Media
 PRODUCT_COPY_FILES += \

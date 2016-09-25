@@ -132,6 +132,9 @@ PRODUCT_COPY_FILES += \
 
 # Camera
 PRODUCT_PACKAGES += \
+    camera.msm8996 \
+    libop2_cam \
+    sensors.hal.tof \
     Snap \
     libcamera_shim
 
